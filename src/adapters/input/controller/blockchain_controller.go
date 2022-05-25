@@ -11,10 +11,13 @@ import (
 )
 
 type BlockChainController struct {
+	Blockchain *model.BlockChain
 }
 
-func NewBlockchainController(port ports) {
-
+func NewBlockchainController(block *model.BlockChain) *BlockChainController {
+	return &BlockChainController{
+		Blockchain: block,
+	}
 }
 
 func (bc *BlockChainController) NewBook(ctx *gin.Context) {
@@ -33,9 +36,8 @@ func (bc *BlockChainController) NewBook(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, book)
 }
 
-func (bc *BlockChainController) WriteBlock(ctx *gin.Context) {
+func (bc *BlockChainController) WriteBlockchain(ctx *gin.Context) {
 
-	var blockchain *model.BlockChain
 	var checkoutItem model.BookCheckout
 
 	if err := ctx.ShouldBindJSON(&checkoutItem); err != nil {
@@ -43,5 +45,10 @@ func (bc *BlockChainController) WriteBlock(ctx *gin.Context) {
 		return
 	}
 
-	blockchain.AddBlock(&checkoutItem)
+	bc.Blockchain.AddBlock(&checkoutItem)
+}
+
+func (bc *BlockChainController) GetBlockchain(ctx *gin.Context) {
+
+	ctx.JSON(http.StatusOK, bc.Blockchain)
 }

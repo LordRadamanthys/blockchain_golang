@@ -22,3 +22,12 @@ func (b *Block) GenerateHash() {
 	hs.Write([]byte(data))
 	b.Hash = hex.EncodeToString(hs.Sum(nil))
 }
+
+func (b *Block) validateBlock(hash string) bool {
+	b.GenerateHash()
+	if b.Hash != hash {
+		return false
+	}
+
+	return true
+}
