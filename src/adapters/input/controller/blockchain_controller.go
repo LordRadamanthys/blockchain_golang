@@ -45,7 +45,8 @@ func (bc *BlockChainController) WriteBlockchain(ctx *gin.Context) {
 		return
 	}
 
-	bc.Blockchain.AddBlock(&checkoutItem)
+	bc.Blockchain.AddBlock(checkoutItem)
+	ctx.JSON(http.StatusOK, checkoutItem)
 }
 
 func (bc *BlockChainController) GetBlockchain(ctx *gin.Context) {

@@ -19,8 +19,8 @@ func NewSatartApplication(bc ports.BlockchainController) *BController {
 
 func (bc *BController) StartApplication() {
 
-	router.GET("/", bc.BlockchainController.GetBlockchain)
-	router.POST("/", bc.BlockchainController.WriteBlockchain)
+	router.GET("/blockchain", bc.BlockchainController.GetBlockchain)
+	router.POST("/blockchain", bc.BlockchainController.WriteBlockchain)
 	router.POST("/book", bc.BlockchainController.NewBook)
 
 	router.Run(":8080")

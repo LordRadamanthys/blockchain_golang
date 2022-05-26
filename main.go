@@ -15,22 +15,29 @@ func main() {
 	blockChainController := controller.NewBlockchainController(Blockchain)
 	routes := server.NewSatartApplication(blockChainController)
 
+	go func() {
+		for _, block := range Blockchain.Blocks {
+			fmt.Printf("Prev. hash: %x\n", block.PrevHash)
+			bytes, _ := json.MarshalIndent(block.Data, "", "")
+			fmt.Printf("Data: %v\n", string(bytes))
+			fmt.Printf("Hash: %v\n", string(block.Hash))
+			fmt.Printf("size: %v\n", len(Blockchain.Blocks))
+		}
+	}()
 	routes.StartApplication()
 
-	for _, block := range Blockchain.Blocks {
-		fmt.Printf("Prev. hash: %x\n", block.PrevHash)
-		bytes, _ := json.MarshalIndent(block.Data, "", "")
-		fmt.Printf("Data: %v\n", string(bytes))
-		fmt.Printf("Hash: %v\n", string(block.Hash))
-
-	}
 }
 
 func InitBlockChain() *model.BlockChain {
 
-	return &model.BlockChain{[]model.Block{*GenesisBlock()}}
+	return &model.BlockChain{[]*model.Block{GenesisBlock()}}
 }
 
 func GenesisBlock() *model.Block {
-	return model.CreateBlock(&model.Block{}, &model.BookCheckout{IsGenesis: true})
+	return model.CreateBlock(&model.Block{}, model.BookCheckout{
+		BookID:       "genesis",
+		User:         "genesis",
+		CheckoutDate: "genesis",
+		IsGenesis:    true,
+	})
 }
